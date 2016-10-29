@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='arena',
-    version='0.0.1',
+    version='0.0.2',
     description='python interface to the are.na api',
     url='https://github.com/frnsys/arena',
     author='Francis Tseng (@frnsys)',
