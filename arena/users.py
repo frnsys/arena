@@ -1,4 +1,5 @@
 from arena.search import search
+from arena.channels import Channel
 from arena.resource import Resource, paginated
 
 
@@ -13,19 +14,35 @@ class User(Resource):
 
     def channel(self):
         """get the user's channel"""
-        return self._get('/{}/channel'.format(self.id), auth=True)
+        data = self._get('/{}/channel'.format(self.id), auth=True)
+        return Channel(**data)
 
     def channels(self):
         """get the user's channels"""
-        return self._get('/{}/channels'.format(self.id), auth=True)
+        page = self._get('/{}/channels'.format(self.id), auth=True)
+        chans = [Channel(**d) for d in page.pop('channels')]
+        return chans, page
 
     def following(self):
         """get who/what the user is following"""
-        return self._get('/{}/following'.format(self.id), auth=True)
+        page = self._get('/{}/following'.format(self.id), auth=True)
+        results = []
+        for d in page.pop('following'):
+            cls = d['base_class']
+            if cls == 'User':
+                obj = User(**d)
+            elif cls == 'Channel':
+                obj = Channel(**d)
+            else:
+                raise TypeError('Unknown base_class: "{}"'.format(cls))
+            results.append(obj)
+        return results, page
 
     def followers(self):
         """get the user's followers"""
-        return self._get('/{}/followers'.format(self.id), auth=True)
+        page = self._get('/{}/followers'.format(self.id), auth=True)
+        users = [User(**d) for d in page.pop('users')]
+        return users, page
 
 
 class Users(Resource):
@@ -38,4 +55,8 @@ class Users(Resource):
     @paginated
     def search(self, query, **kwargs):
         """searches users"""
-        return search.users(query, **kwargs)
+        page = search.users(query, **kwargs)
+        for k in ['channels', 'blocks']:
+            page.pop(k)
+        users = [User(**d) for d in page.pop('users')]
+        return users, page

@@ -3,9 +3,9 @@ access_token = None
 BASE_URL = 'http://api.are.na/v2'
 
 from .feed import Feed
-from .users import Users
-from .blocks import Blocks
-from .channels import Channels
+from .users import Users, User
+from .blocks import Blocks, Block
+from .channels import Channels, Channel
 
 users = Users()
 blocks = Blocks()

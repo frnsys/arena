@@ -1,3 +1,4 @@
+import arena
 from arena.search import search
 from arena.resource import Resource, paginated
 
@@ -9,7 +10,12 @@ class Channel(Resource):
         self.slug = slug
         if not data:
             data = self.thumb()
+
+        # temp solution, to not override the `contents` method
+        data.pop('contents')
+
         self._set_data(data)
+        self.user = arena.User(**self.user)
 
     @paginated
     def all(self, **kwargs):
@@ -23,21 +29,39 @@ class Channel(Resource):
     @paginated
     def connections(self, **kwargs):
         """get connections for this channel (paginated)"""
-        return self._get('/{}/connections'.format(self.slug), params=kwargs['params'])
+        page = self._get('/{}/connections'.format(self.slug), params=kwargs['params'])
+        chans = [Channel(**d) for d in page.pop('channels')]
+        return chans, page
 
     @paginated
     def channels(self, **kwargs):
         """get connected channels for this channel (paginated)"""
-        return self._get('/{}/channels'.format(self.slug), params=kwargs['params'])
+        page = self._get('/{}/channels'.format(self.slug), params=kwargs['params'])
+        chans = [Channel(**d) for d in page.pop('channels')]
+        return chans, page
 
     @paginated
     def contents(self, **kwargs):
         """get only contents for this channel (paginated)"""
-        return self._get('/{}/contents'.format(self.slug), params=kwargs['params'])
+        # for some reason this one is missing pagination data?
+        page = self._get('/{}/contents'.format(self.slug), params=kwargs['params'])
+        contents = []
+        for d in page.pop('contents'):
+            cls = d['base_class']
+            if cls == 'Block':
+                obj = arena.Block(**d)
+            elif cls == 'Channel':
+                obj = arena.Channel(**d)
+            else:
+                raise TypeError('Unknown base_class: "{}"'.format(cls))
+            contents.append(obj)
+        return contents, page
 
     def collaborators(self):
         """get only collaborators for this channel"""
-        return self._get('/{}/collaborators'.format(self.slug))
+        page = self._get('/{}/collaborators'.format(self.slug))
+        users = [arena.User(**d) for d in page.pop('users')]
+        return users, page
 
     # TODO
     # <http://dev.are.na/documentation/channels#block_45048>
@@ -77,7 +101,11 @@ class Channels(Resource):
     @paginated
     def list(self, **kwargs):
         """list channels (paginated)"""
-        return self._get('', params=kwargs['params'])
+        page = self._get('', params=kwargs['params'])
+        for k in ['users', 'blocks']:
+            page.pop(k)
+        chans = [Channel(**d) for d in page.pop('channels')]
+        return chans, page
 
     def create(self, title, status='public'):
         """creates a new channel"""
@@ -93,4 +121,9 @@ class Channels(Resource):
     @paginated
     def search(self, query, **kwargs):
         """searches channels"""
-        return search.channels(query, **kwargs)
+        page = search.channels(query, **kwargs)
+        for k in ['users', 'blocks']:
+            page.pop(k)
+        chans = [Channel(**d) for d in page.pop('channels')]
+        return chans, page
+

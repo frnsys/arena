@@ -1,3 +1,4 @@
+import arena
 from arena.search import search
 from arena.resource import Resource, paginated
 
@@ -10,11 +11,14 @@ class Block(Resource):
         if not data:
             data = self._get('/{}'.format(id))
         self._set_data(data)
+        self.user = arena.User(**self.user)
 
     @paginated
     def channels(self, **kwargs):
         """get channels this block is in"""
-        return self._get('/{}/channels'.format(self.id), params=kwargs['params'])
+        page = self._get('/{}/channels'.format(self.id), params=kwargs['params'])
+        chans = [arena.Channel(**d) for d in page.pop('channels')]
+        return chans, page
 
     def update(self, **kwargs):
         """update the block's attributes (all are optional):
@@ -39,4 +43,9 @@ class Blocks(Resource):
     @paginated
     def search(self, query, **kwargs):
         """searches blocks"""
-        return search.blocks(query, **kwargs)
+        page = search.blocks(query, **kwargs)
+        for k in ['channels', 'users']:
+            page.pop(k)
+        blocks = [Block(**d) for d in page.pop('blocks')]
+        return blocks, page
+
