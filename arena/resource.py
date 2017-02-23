@@ -72,3 +72,16 @@ class Resource():
         if resp.status_code != 200:
             resp.raise_for_status()
         return resp.json()
+
+
+def resource_for_data(d):
+    cls = d['base_class']
+    if cls == 'Block':
+        obj = arena.Block(**d)
+    elif cls == 'Channel':
+        obj = arena.Channel(**d)
+    elif cls == 'User':
+        obj = arena.User(**d)
+    else:
+        raise TypeError('Unknown base_class: "{}"'.format(cls))
+    return obj

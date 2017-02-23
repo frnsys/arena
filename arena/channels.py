@@ -1,6 +1,6 @@
 import arena
 from arena.search import search
-from arena.resource import Resource, paginated
+from arena.resource import Resource, paginated, resource_for_data
 
 
 class Channel(Resource):
@@ -45,16 +45,7 @@ class Channel(Resource):
         """get only contents for this channel (paginated)"""
         # for some reason this one is missing pagination data?
         page = self._get('/{}/contents'.format(self.slug), params=kwargs['params'])
-        contents = []
-        for d in page.pop('contents'):
-            cls = d['base_class']
-            if cls == 'Block':
-                obj = arena.Block(**d)
-            elif cls == 'Channel':
-                obj = arena.Channel(**d)
-            else:
-                raise TypeError('Unknown base_class: "{}"'.format(cls))
-            contents.append(obj)
+        contents = [resource_for_data(d) for d in page.pop('contents')]
         return contents, page
 
     def collaborators(self):

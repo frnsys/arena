@@ -18,7 +18,6 @@ it's still in a preliminary untested state!
 - tests
 - documentation
 - authentication flow
-- wrap responses in objects? e.g. Channel, User, etc
 
 ## api parity progress
 

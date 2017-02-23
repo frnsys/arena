@@ -1,6 +1,6 @@
 from arena.search import search
 from arena.channels import Channel
-from arena.resource import Resource, paginated
+from arena.resource import Resource, paginated, resource_for_data
 
 
 class User(Resource):
@@ -26,17 +26,8 @@ class User(Resource):
     def following(self):
         """get who/what the user is following"""
         page = self._get('/{}/following'.format(self.id), auth=True)
-        results = []
-        for d in page.pop('following'):
-            cls = d['base_class']
-            if cls == 'User':
-                obj = User(**d)
-            elif cls == 'Channel':
-                obj = Channel(**d)
-            else:
-                raise TypeError('Unknown base_class: "{}"'.format(cls))
-            results.append(obj)
-        return results, page
+        items = [resource_for_data(d) for d in page.pop('following')]
+        return items, page
 
     def followers(self):
         """get the user's followers"""
