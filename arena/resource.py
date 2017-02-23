@@ -1,6 +1,7 @@
+import arena
 import requests
 from functools import wraps
-from arena import BASE_URL, access_token, auth_token
+from arena import BASE_URL
 
 
 def paginated(fn):
@@ -22,13 +23,13 @@ class Resource():
 
     def _headers(self, auth):
         if auth:
-            if access_token is not None:
+            if arena.access_token is not None:
                 return {
-                    'Authorization': 'Bearer {}'.format(access_token)
+                    'Authorization': 'Bearer {}'.format(arena.access_token)
                 }
-            elif auth_token is not None:
+            elif arena.auth_token is not None:
                 return {
-                    'X-AUTH-TOKEN': auth_token
+                    'X-AUTH-TOKEN': arena.auth_token
                 }
             raise AttributeError('No access token or auth token is set')
         return {}
