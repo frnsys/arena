@@ -1,4 +1,4 @@
-this is a python interface to the [are.na](https://www.are.na/) API.
+this is a python interface to the [are.na](https://www.are.na/) [API](https://dev.are.na/documentation).
 
 it's still in a preliminary untested state!
 
@@ -16,5 +16,6 @@ it's still in a preliminary untested state!
 ## todo
 
 - tests
+- documentation
 - authentication flow
 - wrap responses in objects? e.g. Channel, User, etc
