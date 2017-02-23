@@ -1,4 +1,4 @@
-from .resource import Resource, paginated
+from arena.resource import Resource, paginated
 
 
 class Search(Resource):

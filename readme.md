@@ -9,9 +9,9 @@ it's still in a preliminary untested state!
 
 ## usage
 
-    from arena import Arena
-    api = Arena(my_access_token)
-    api.channels.channel('faq')
+    import arena
+    arena.access_token = my_access_token
+    arena.channels.channel('faq')
 
 ## todo
 

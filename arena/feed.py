@@ -1,4 +1,4 @@
-from .resource import Resource
+from arena.resource import Resource
 
 
 class Feed(Resource):

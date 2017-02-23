@@ -1,13 +1,12 @@
-from .search import search
-from .resource import Resource, paginated
+from arena.search import search
+from arena.resource import Resource, paginated
 
 
 class Channel(Resource):
     base_endpoint = '/channels'
 
-    def __init__(self, slug, access_token):
+    def __init__(self, slug):
         self.slug = slug
-        self.access_token = access_token
 
     @paginated
     def all(self, **kwargs):
@@ -86,7 +85,7 @@ class Channels(Resource):
 
     def channel(self, slug):
         """get an existing channel"""
-        return Channel(slug, access_token=self.access_token)
+        return Channel(slug)
 
     @paginated
     def search(self, query, **kwargs):

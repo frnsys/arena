@@ -1,12 +1,11 @@
 import requests
 from functools import wraps
-
-BASE_URL = 'http://api.are.na/v2'
+from arena import BASE_URL, access_token, auth_token
 
 
 def paginated(fn):
     @wraps(fn)
-    def decorated(*args, page=0, per_page=15, **kwargs):
+    def decorated(*args, page=1, per_page=20, **kwargs):
         params = kwargs.get('params', {})
         params.update({
             'page': page,
@@ -17,25 +16,27 @@ def paginated(fn):
 
 
 class Resource():
-    def __init__(self, access_token=None):
-        self.access_token = access_token
+    def _set_data(self, data):
+        for name, val in data.items():
+            setattr(self, name, val)
 
     def _headers(self, auth):
         if auth:
-            if self.access_token is not None:
+            if access_token is not None:
                 return {
-                    'Authorization': 'Bearer {}'.format(self.access_token)
+                    'Authorization': 'Bearer {}'.format(access_token)
                 }
-            elif self.auth_token is not None:
+            elif auth_token is not None:
                 return {
-                    'X-AUTH-TOKEN': self.auth_token
+                    'X-AUTH-TOKEN': auth_token
                 }
             raise AttributeError('No access token or auth token is set')
         return {}
 
     def _get(self, endpoint, params=None, auth=False):
+        url = ''.join([BASE_URL, self.base_endpoint, endpoint])
         resp = requests.get(
-            ''.join([BASE_URL, self.base_endpoint, endpoint]),
+            url,
             params=params or {},
             headers=self._headers(auth))
         if resp.status_code != 200:

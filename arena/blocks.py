@@ -1,16 +1,14 @@
-from .search import search
-from .resource import Resource, paginated
+from arena.search import search
+from arena.resource import Resource, paginated
 
 
 class Block(Resource):
     base_endpoint = '/blocks'
 
-    def __init__(self, id, access_token):
+    def __init__(self, id):
         self.id = id
-        self.access_token = access_token
         data = self._get('/{}'.format(id))
-        for name, val in data.items():
-            setattr(self, name, val)
+        self._set_data(data)
 
     @paginated
     def channels(self, **kwargs):
@@ -35,7 +33,7 @@ class Blocks(Resource):
 
     def block(self, id):
         """get an existing block"""
-        return Block(id, access_token=self.access_token)
+        return Block(id)
 
     @paginated
     def search(self, query, **kwargs):
