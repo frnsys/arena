@@ -19,3 +19,11 @@ it's still in a preliminary untested state!
 - documentation
 - authentication flow
 - wrap responses in objects? e.g. Channel, User, etc
+
+## api parity progress
+
+- [ ] Authentication
+- [ ] Blocks
+- [ ] Channels
+- [x] Search
+- [x] Users
