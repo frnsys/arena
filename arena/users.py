@@ -1,4 +1,4 @@
-from .search import Search
+from .search import search
 from .resource import Resource, paginated
 
 
@@ -38,4 +38,5 @@ class Users(Resource):
 
     @paginated
     def search(self, query, **kwargs):
-        return Search().users(query, **kwargs)
+        """searches users"""
+        return search.users(query, **kwargs)

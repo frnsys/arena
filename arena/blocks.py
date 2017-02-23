@@ -1,4 +1,4 @@
-from .search import Search
+from .search import search
 from .resource import Resource, paginated
 
 
@@ -39,4 +39,5 @@ class Blocks(Resource):
 
     @paginated
     def search(self, query, **kwargs):
-        return Search().blocks(query, **kwargs)
+        """searches blocks"""
+        return search.blocks(query, **kwargs)

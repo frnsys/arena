@@ -1,4 +1,4 @@
-from .search import Search
+from .search import search
 from .resource import Resource, paginated
 
 
@@ -90,4 +90,5 @@ class Channels(Resource):
 
     @paginated
     def search(self, query, **kwargs):
-        return Search().channels(query, **kwargs)
+        """searches channels"""
+        return search.channels(query, **kwargs)
