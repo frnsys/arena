@@ -5,8 +5,11 @@ from arena.resource import Resource, paginated
 class Channel(Resource):
     base_endpoint = '/channels'
 
-    def __init__(self, slug):
+    def __init__(self, slug, **data):
         self.slug = slug
+        if not data:
+            data = self.thumb()
+        self._set_data(data)
 
     @paginated
     def all(self, **kwargs):

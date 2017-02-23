@@ -5,9 +5,10 @@ from arena.resource import Resource, paginated
 class Block(Resource):
     base_endpoint = '/blocks'
 
-    def __init__(self, id):
+    def __init__(self, id, **data):
         self.id = id
-        data = self._get('/{}'.format(id))
+        if not data:
+            data = self._get('/{}'.format(id))
         self._set_data(data)
 
     @paginated
