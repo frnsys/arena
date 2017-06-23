@@ -6,14 +6,14 @@ from arena import BASE_URL
 
 def paginated(fn):
     @wraps(fn)
-    def decorated(*args, page=1, per_page=20, **kwargs):
+    def decorated(self, page=1, per_page=20, *args, **kwargs):
         params = {
             'page': page,
             'per': per_page
         }
         params.update(kwargs.get('params', {}))
         kwargs['params'] = params
-        return fn(*args, **kwargs)
+        return fn(self, *args, **kwargs)
     return decorated
 
 
