@@ -1,9 +1,6 @@
-import arena
 import unittest
-from config import token
 from arena.channels import Channels
 
-arena.access_token = token
 
 class TestChannels(unittest.TestCase):
     def setUp(self):

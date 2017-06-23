@@ -1,9 +1,5 @@
-import arena
 import unittest
-from config import token
 from arena.blocks import Block
-
-arena.access_token = token
 
 
 class TestBlocks(unittest.TestCase):
