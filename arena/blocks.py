@@ -9,14 +9,14 @@ class Block(Resource):
     def __init__(self, id, **data):
         self.id = id
         if not data:
-            data = self._get('/{}'.format(id))
+            data = self._get('/{id}')
         self._set_data(data)
         self.user = arena.User(**self.user)
 
     @paginated
     def channels(self, **kwargs):
         """get channels this block is in"""
-        page = self._get('/{}/channels'.format(self.id), params=kwargs['params'])
+        page = self._get('/{id}/channels', params=kwargs['params'])
         chans = [arena.Channel(**d) for d in page.pop('channels')]
         return chans, page
 
@@ -26,11 +26,11 @@ class Block(Resource):
         - description: markdown
         - content: markdown (for text blocks only)
         """
-        return self._put('/{}'.format(self.id), data=kwargs)
+        return self._put('/{id}', data=kwargs)
 
     def delete(self):
         """deletes the block"""
-        return self._delete('/{}'.format(self.id))
+        return self._delete('/{id}')
 
 
 class Blocks(Resource):

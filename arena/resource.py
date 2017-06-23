@@ -35,10 +35,13 @@ class Resource():
             raise AttributeError('No access token or auth token is set')
         return {}
 
+    def _url(self, endpoint):
+        endpoint = endpoint.format(**self.__dict__)
+        return ''.join([BASE_URL, self.base_endpoint, endpoint])
+
     def _get(self, endpoint, params=None, auth=False):
-        url = ''.join([BASE_URL, self.base_endpoint, endpoint])
         resp = requests.get(
-            url,
+            self._url(endpoint),
             params=params or {},
             headers=self._headers(auth))
         if resp.status_code != 200:
@@ -47,7 +50,7 @@ class Resource():
 
     def _post(self, endpoint, data, params=None):
         resp = requests.post(
-            ''.join([BASE_URL, self.base_endpoint, endpoint]),
+            self._url(endpoint),
             params=params or {},
             headers=self._headers(True),
             json=data)
@@ -57,7 +60,7 @@ class Resource():
 
     def _put(self, endpoint, data, params=None):
         resp = requests.put(
-            ''.join([BASE_URL, self.base_endpoint, endpoint]),
+            self._url(endpoint),
             params=params or {},
             headers=self._headers(True),
             json=data)
@@ -67,7 +70,7 @@ class Resource():
 
     def _delete(self, endpoint, params=None):
         resp = requests.delete(
-            ''.join([BASE_URL, self.base_endpoint, endpoint]),
+            self._url(endpoint),
             params=params or {},
             headers=self._headers(True))
         if resp.status_code != 200:

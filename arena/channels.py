@@ -20,23 +20,24 @@ class Channel(Resource):
     @paginated
     def all(self, **kwargs):
         """gets full representation of this channel (paginated)"""
-        return self._get('/{}'.format(self.slug), params=kwargs['params'])
+        return self._get('/{slug}', params=kwargs['params'])
 
     def thumb(self, **kwargs):
         """gets a small representation of this channel"""
-        return self._get('/{}/thumb'.format(self.slug))
+        return self._get('/{slug}/thumb')
 
     @paginated
     def connections(self, **kwargs):
         """get connections for this channel (paginated)"""
-        page = self._get('/{}/connections'.format(self.slug), params=kwargs['params'])
+        page = self._get('/{slug}/connections', params=kwargs['params'])
         chans = [Channel(**d) for d in page.pop('channels')]
         return chans, page
 
     @paginated
     def channels(self, **kwargs):
         """get connected channels for this channel (paginated)"""
-        page = self._get('/{}/channels'.format(self.slug), params=kwargs['params'])
+        page = self._get('/{slug}/channels', params=kwargs['params'])
+        print(page)
         chans = [Channel(**d) for d in page.pop('channels')]
         return chans, page
 
@@ -44,13 +45,13 @@ class Channel(Resource):
     def contents(self, **kwargs):
         """get only contents for this channel (paginated)"""
         # for some reason this one is missing pagination data?
-        page = self._get('/{}/contents'.format(self.slug), params=kwargs['params'])
+        page = self._get('/{slug}/contents', params=kwargs['params'])
         contents = [resource_for_data(d) for d in page.pop('contents')]
         return contents, page
 
     def collaborators(self):
         """get only collaborators for this channel"""
-        page = self._get('/{}/collaborators'.format(self.slug))
+        page = self._get('/{slug}/collaborators')
         users = [arena.User(**d) for d in page.pop('users')]
         return users, page
 
@@ -65,11 +66,11 @@ class Channel(Resource):
         - title: str
         - status: one of ['public', 'closed', 'private']
         """
-        return self._put('/{}'.format(self.slug), data=kwargs)
+        return self._put('/{slug}', data=kwargs)
 
     def delete(self):
         """deletes a channel"""
-        return self._delete('/{}'.format(self.slug))
+        return self._delete('/{slug}')
 
     def add_block(self, source=None, content=None):
         """add a new block to the channel.
@@ -83,7 +84,7 @@ class Channel(Resource):
             data = {'content': content}
         else:
             raise ValueError('One of `source` or `content` must be specified')
-        return self._post('/{}/blocks'.format(self.slug), data=data)
+        return self._post('/{slug}/blocks', data=data)
 
 
 class Channels(Resource):

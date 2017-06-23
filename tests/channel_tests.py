@@ -1,15 +1,17 @@
 import unittest
-from arena.channels import Channels
+from arena.channels import Channel, Channels
 
 
-class TestChannels(unittest.TestCase):
+class ChannelTests(unittest.TestCase):
     def setUp(self):
         self.channels = Channels()
 
     def test_list(self):
-        data = self.channels.list()
-        self.assertTrue(data is not None)
+        chans, page = self.channels.list()
+        self.assertTrue(len(chans) > 0)
+        for chan in chans:
+            self.assertIsInstance(chan, Channel)
 
     def test_channel(self):
-        data = self.channels.channel('faq')
-        self.assertTrue(data is not None) # TODO better tests
+        chan = self.channels.channel('faq')
+        self.assertEqual(chan.slug, 'faq')
