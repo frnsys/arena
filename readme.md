@@ -26,3 +26,17 @@ it's still in a preliminary untested state!
 - [ ] Channels
 - [x] Search
 - [x] Users
+
+## example
+
+Bulk adding urls to a channel:
+
+```
+import arena
+from arena.channels import Channel
+arena.access_token = '<YOUR ACCESS TOKEN>'
+
+chan = Channel('<channel-slug>')
+for url in urls:
+    chan.add_block(source=url)
+```
