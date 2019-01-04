@@ -1,13 +1,16 @@
-auth_token = None
-access_token = None
 BASE_URL = 'http://api.are.na/v2'
 
 from .feed import Feed
-from .users import Users, User
-from .blocks import Blocks, Block
-from .channels import Channels, Channel
+from .users import Users
+from .blocks import Blocks
+from .channels import Channels
 
-users = Users()
-blocks = Blocks()
-channels = Channels()
-feed = Feed()
+
+class Arena:
+    def __init__(self, access_token):
+        self.access_token = access_token
+
+        self.users = Users(self)
+        self.blocks = Blocks(self)
+        self.channels = Channels(self)
+        self.feed = Feed(self)

@@ -9,8 +9,8 @@ it's still in a preliminary untested state!
 
 ## usage
 
-    import arena
-    arena.access_token = my_access_token
+    from arena import Arena
+    arena = Arena(my_access_token)
     arena.channels.channel('faq')
 
 ## todo

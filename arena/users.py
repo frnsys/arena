@@ -1,6 +1,6 @@
-from arena.search import search
-from arena.channels import Channel
-from arena.resource import Resource, paginated, resource_for_data
+from .search import search
+from .channels import Channel
+from .resource import Resource, paginated
 
 
 class User(Resource):
@@ -26,13 +26,13 @@ class User(Resource):
     def following(self):
         """get who/what the user is following"""
         page = self._get('/{id}/following', auth=True)
-        items = [resource_for_data(d) for d in page.pop('following')]
+        items = [self._from_data(d) for d in page.pop('following')]
         return items, page
 
     def followers(self):
         """get the user's followers"""
         page = self._get('/{id}/followers', auth=True)
-        users = [User(**d) for d in page.pop('users')]
+        users = [self._resource(User, **d) for d in page.pop('users')]
         return users, page
 
 
@@ -41,7 +41,7 @@ class Users(Resource):
 
     def user(self, id):
         """get an existing user"""
-        return User(id)
+        return self._resource(User, id)
 
     @paginated
     def search(self, query, **kwargs):
@@ -49,5 +49,5 @@ class Users(Resource):
         page = search.users(query, **kwargs)
         for k in ['channels', 'blocks']:
             page.pop(k)
-        users = [User(**d) for d in page.pop('users')]
+        users = [self._resource(User, **d) for d in page.pop('users')]
         return users, page

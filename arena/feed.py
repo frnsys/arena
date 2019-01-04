@@ -1,4 +1,4 @@
-from arena.resource import Resource, resource_for_data
+from .resource import Resource
 
 
 class Feed(Resource):
@@ -6,5 +6,5 @@ class Feed(Resource):
 
     def __call__(self, offset=0):
         page = self._get('', params={'offset': offset}, auth=True)
-        items = [resource_for_data(d) for d in page.pop('items')]
+        items = [self._from_data(d) for d in page.pop('items')]
         return items, page
