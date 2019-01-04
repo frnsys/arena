@@ -1,5 +1,6 @@
 import unittest
 from tests import arena
+from arena.channels import Channel
 
 
 class UserTests(unittest.TestCase):
@@ -8,3 +9,23 @@ class UserTests(unittest.TestCase):
 
     def test_data(self):
         self.assertEqual(self.user.slug, 'francis-tseng')
+
+    # Note: this endpoint seems to be broken?
+    # def test_channel(self):
+    #     chan = self.user.channel()
+    #     self.assertIsInstance(chan, Channel)
+
+    def test_channels(self):
+        chans, page = self.user.channels()
+        self.assertEqual(page['current_page'], 1)
+        self.assertGreater(len(chans), 0)
+
+    def test_followers(self):
+        users, page = self.user.followers()
+        self.assertEqual(page['current_page'], 1)
+        self.assertGreater(len(users), 0)
+
+    def test_following(self):
+        following, page = self.user.following()
+        self.assertEqual(page['current_page'], 1)
+        self.assertGreater(len(following), 0)

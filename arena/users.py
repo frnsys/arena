@@ -13,24 +13,28 @@ class User(Resource):
 
     def channel(self):
         """get the user's channel"""
+        # This endpoint seems to be broken?
         data = self._get('/{id}/channel', auth=True)
         return self.api.channels.channel(**data)
 
-    def channels(self):
+    @paginated
+    def channels(self, **kwargs):
         """get the user's channels"""
-        page = self._get('/{id}/channels', auth=True)
+        page = self._get('/{id}/channels', params=kwargs['params'], auth=True)
         chans = [self.api.channels.channel(**d) for d in page.pop('channels')]
         return chans, page
 
-    def following(self):
+    @paginated
+    def following(self, **kwargs):
         """get who/what the user is following"""
-        page = self._get('/{id}/following', auth=True)
+        page = self._get('/{id}/following', params=kwargs['params'], auth=True)
         items = [self._from_data(d) for d in page.pop('following')]
         return items, page
 
-    def followers(self):
+    @paginated
+    def followers(self, **kwargs):
         """get the user's followers"""
-        page = self._get('/{id}/followers', auth=True)
+        page = self._get('/{id}/followers', params=kwargs['params'], auth=True)
         users = [self._resource(User, **d) for d in page.pop('users')]
         return users, page
 

@@ -1,9 +1,6 @@
 import requests
 from functools import wraps
 from arena import BASE_URL
-# from .blocks import Block
-# from .channels import Channel
-# from .users import User
 
 
 def paginated(fn):
@@ -86,13 +83,11 @@ class Resource():
         return resource_cls(self.api, *args, **kwargs)
 
     def _from_data(self, data):
-        cls = data['base_class']
-        if cls == 'Block':
-            obj = self._resource(Block, **data)
-        elif cls == 'Channel':
-            obj = self._resource(Channel, **data)
-        elif cls == 'User':
-            obj = self._resource(User, **data)
-        else:
+        subclasses = Resource.__subclasses__()
+        cls_name = data['base_class']
+        try:
+            cls = next(cls for cls in subclasses if cls.__name__ == cls_name)
+            obj = self._resource(cls, **data)
+        except StopIteration:
             raise TypeError('Unknown base_class: "{}"'.format(cls))
         return obj

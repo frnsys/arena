@@ -18,7 +18,6 @@ class Block(Resource):
     def channels(self, **kwargs):
         """get channels this block is in"""
         page = self._get('/{id}/channels', params=kwargs['params'], auth=True)
-        print(page)
         chans = [self._resource(Channel, **d) for d in page.pop('channels')]
         return chans, page
 
