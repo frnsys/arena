@@ -14,6 +14,20 @@ class ChannelTests(unittest.TestCase):
         chan = arena.channels.channel('yuppie-dystopia')
         self.assertEqual(chan.slug, 'yuppie-dystopia')
 
+    # Getting a 500 error
+    def test_update(self):
+        return
+        chan = arena.channels.channel('arena-api-testing')
+        self.assertEqual(chan.status, 'public')
+
+        chan.update(status='closed')
+        chan = arena.channels.channel('arena-api-testing')
+        self.assertEqual(chan.status, 'closed')
+
+        chan.update(status='public')
+        chan = arena.channels.channel('arena-api-testing')
+        self.assertEqual(chan.status, 'public')
+
     # Endpoint seems to be missing?
     def test_toggle_block_selection(self):
         return

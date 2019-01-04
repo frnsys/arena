@@ -36,7 +36,6 @@ class Channel(Resource):
     def channels(self, **kwargs):
         """get connected channels for this channel (paginated)"""
         page = self._get('/{slug}/channels', params=kwargs['params'])
-        print(page)
         chans = [self._resource(Channel, **d) for d in page.pop('channels')]
         return chans, page
 
@@ -54,11 +53,21 @@ class Channel(Resource):
         users = [self.api.users.user(**d) for d in page.pop('users')]
         return users, page
 
-    # TODO
-    # <http://dev.are.na/documentation/channels#block_45048>
-    # def add_collaborator(self):
-        # return self._post('{}/collaborators'.format(self.slug)
+    def add_collaborator(self, collaborator_ids):
+        """adds collaborators from the specified
+        list of collaborator ids"""
+        return self._post('/{slug}/collaborators', data={
+            'ids': collaborator_ids
+        })
 
+    def set_collaborators(self, collaborator_ids):
+        """updates the channel collaborators
+        to match the specified list of collaborator ids"""
+        return self._post('/{slug}/collaborators', data={
+            'ids': collaborator_ids
+        })
+
+    # TODO getting a 500 error
     def update(self, **kwargs):
         """update a channel's attributes
         can specify:
@@ -70,6 +79,13 @@ class Channel(Resource):
     def delete(self):
         """deletes a channel"""
         return self._delete('/{slug}')
+
+    def sort(self, content_ids):
+        """updates the channel order to match the
+        order of provided ids"""
+        return self._put('/{slug}/sort', data={
+            'ids': content_ids
+        })
 
     def add_block(self, source=None, content=None):
         """add a new block to the channel.
