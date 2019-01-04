@@ -1,4 +1,5 @@
-import arena
-from config import token
+import os
+from arena import Arena
 
-arena.access_token = token
+token = os.environ['ARENA']
+arena = Arena(token)

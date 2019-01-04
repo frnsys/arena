@@ -1,4 +1,4 @@
-from arena.resource import Resource, paginated
+from .resource import Resource, paginated
 
 
 class Search(Resource):
@@ -23,6 +23,3 @@ class Search(Resource):
     def users(self, query, **kwargs):
         kwargs['params'].update({'q': query})
         return self._get('/users', params=kwargs['params'])
-
-
-search = Search()

@@ -2,24 +2,20 @@ this is a python interface to the [are.na](https://www.are.na/) [API](https://de
 
 it's still in a preliminary untested state!
 
-## installation
+## Installation
 
     pip install arena
 
 
-## usage
+## Usage
 
-    import arena
-    arena.access_token = my_access_token
+    from arena import Arena
+    arena = Arena(my_access_token)
     arena.channels.channel('faq')
 
-## todo
+More complete documentation coming soon
 
-- tests
-- documentation
-- authentication flow
-
-## api parity progress
+## API parity progress
 
 - [ ] Authentication
 - [ ] Blocks
@@ -27,16 +23,24 @@ it's still in a preliminary untested state!
 - [x] Search
 - [x] Users
 
-## example
+## Example
 
 Bulk adding urls to a channel:
 
 ```
-import arena
-from arena.channels import Channel
-arena.access_token = '<YOUR ACCESS TOKEN>'
+from arena import Arena
+arena = Arena(my_access_token)
 
-chan = Channel('<channel-slug>')
+chan = arena.channels.channel('<channel-slug>')
 for url in urls:
     chan.add_block(source=url)
+```
+
+## Testing
+
+Export your Are.na token as an environment variable called `ARENA`, then run `nosetests`, e.g.:
+
+```
+export ARENA=my-token
+nosetests tests
 ```

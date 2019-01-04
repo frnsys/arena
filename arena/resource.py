@@ -1,7 +1,9 @@
-import arena
 import requests
 from functools import wraps
 from arena import BASE_URL
+# from .blocks import Block
+# from .channels import Channel
+# from .users import User
 
 
 def paginated(fn):
@@ -18,19 +20,22 @@ def paginated(fn):
 
 
 class Resource():
+    def __init__(self, api):
+        self.api = api
+
     def _set_data(self, data):
         for name, val in data.items():
             setattr(self, name, val)
 
     def _headers(self, auth):
         if auth:
-            if arena.access_token is not None:
+            if self.api.access_token is not None:
                 return {
-                    'Authorization': 'Bearer {}'.format(arena.access_token)
+                    'Authorization': 'Bearer {}'.format(self.api.access_token)
                 }
-            elif arena.auth_token is not None:
+            elif self.api.auth_token is not None:
                 return {
-                    'X-AUTH-TOKEN': arena.auth_token
+                    'X-AUTH-TOKEN': self.api.auth_token
                 }
             raise AttributeError('No access token or auth token is set')
         return {}
@@ -77,15 +82,17 @@ class Resource():
             resp.raise_for_status()
         return resp.json()
 
+    def _resource(self, resource_cls, *args, **kwargs):
+        return resource_cls(self.api, *args, **kwargs)
 
-def resource_for_data(d):
-    cls = d['base_class']
-    if cls == 'Block':
-        obj = arena.Block(**d)
-    elif cls == 'Channel':
-        obj = arena.Channel(**d)
-    elif cls == 'User':
-        obj = arena.User(**d)
-    else:
-        raise TypeError('Unknown base_class: "{}"'.format(cls))
-    return obj
+    def _from_data(self, data):
+        cls = data['base_class']
+        if cls == 'Block':
+            obj = self._resource(Block, **data)
+        elif cls == 'Channel':
+            obj = self._resource(Channel, **data)
+        elif cls == 'User':
+            obj = self._resource(User, **data)
+        else:
+            raise TypeError('Unknown base_class: "{}"'.format(cls))
+        return obj
