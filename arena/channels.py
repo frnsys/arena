@@ -10,8 +10,8 @@ class Channel(Resource):
         if not data:
             data = self.thumb()
 
-        # temp solution, to not override the `contents` method
-        data.pop('contents')
+        # to not override the `contents` method
+        self._contents = data.pop('contents')
 
         self._set_data(data)
         self.user = self.api.users.user(**self.user)
@@ -83,7 +83,18 @@ class Channel(Resource):
             data = {'content': content}
         else:
             raise ValueError('One of `source` or `content` must be specified')
-        return self._post('/{slug}/blocks', data=data)
+        data = self._post('/{slug}/blocks', data=data)
+        return self.api.blocks.block(**data)
+
+    def remove_block(self, block_id):
+        """removes a block from the channel"""
+        return self._delete('/{{slug}}/blocks/{0}'.format(block_id))
+
+    # TODO This endpoint seems to be broken?
+    def toggle_selection(self, block_id):
+        """toggle's a block's selection/connection
+        to the channel"""
+        return self._put('/{{slug}}/blocks/{0}/selection'.format(block_id))
 
 
 class Channels(Resource):

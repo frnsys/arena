@@ -11,9 +11,9 @@ class User(Resource):
             data = self._get('/{id}')
         self._set_data(data)
 
+    # TODO This endpoint seems to be broken?
     def channel(self):
         """get the user's channel"""
-        # This endpoint seems to be broken?
         data = self._get('/{id}/channel', auth=True)
         return self.api.channels.channel(**data)
 

@@ -60,14 +60,20 @@ class Resource():
             resp.raise_for_status()
         return resp.json()
 
-    def _put(self, endpoint, data, params=None):
+    def _put(self, endpoint, data=None, params=None):
+        data = data or {}
         resp = requests.put(
             self._url(endpoint),
             params=params or {},
             headers=self._headers(True),
             json=data)
-        if resp.status_code != 200:
+
+        # 204 No Content
+        if resp.status_code == 204:
+            return
+        elif resp.status_code != 200:
             resp.raise_for_status()
+
         return resp.json()
 
     def _delete(self, endpoint, params=None):
@@ -75,8 +81,13 @@ class Resource():
             self._url(endpoint),
             params=params or {},
             headers=self._headers(True))
-        if resp.status_code != 200:
+
+        # 204 No Content
+        if resp.status_code == 204:
+            return
+        elif resp.status_code != 200:
             resp.raise_for_status()
+
         return resp.json()
 
     def _resource(self, resource_cls, *args, **kwargs):

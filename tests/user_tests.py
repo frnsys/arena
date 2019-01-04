@@ -10,10 +10,12 @@ class UserTests(unittest.TestCase):
     def test_data(self):
         self.assertEqual(self.user.slug, 'francis-tseng')
 
-    # Note: this endpoint seems to be broken?
-    # def test_channel(self):
-    #     chan = self.user.channel()
-    #     self.assertIsInstance(chan, Channel)
+    # Endpoint seems to be missing?
+    def test_channel(self):
+        return
+
+        chan = self.user.channel()
+        self.assertIsInstance(chan, Channel)
 
     def test_channels(self):
         chans, page = self.user.channels()

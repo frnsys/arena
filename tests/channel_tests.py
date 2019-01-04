@@ -13,3 +13,35 @@ class ChannelTests(unittest.TestCase):
     def test_channel(self):
         chan = arena.channels.channel('yuppie-dystopia')
         self.assertEqual(chan.slug, 'yuppie-dystopia')
+
+    # Endpoint seems to be missing?
+    def test_toggle_block_selection(self):
+        return
+
+        block_id = '896296'
+        chan = arena.channels.channel('arena-api-testing')
+        contents, _ = chan.contents()
+
+        selected_before = any(c.id == block_id for c in contents if c.base_class == 'Block')
+        chan.toggle_selection(block_id)
+
+        contents, _ = chan.contents()
+        selected_after = any(c.id == block_id for c in contents if c.base_class == 'Block')
+
+        self.assertNotEqual(selected_before, selected_after)
+
+    def test_add_remove_block(self):
+        chan = arena.channels.channel('arena-api-testing')
+        block = chan.add_block('https://github.com/frnsys/arena')
+
+        # Check block was added
+        contents, _ = chan.contents()
+        blocks = [c for c in contents if c.base_class == 'Block']
+        self.assertTrue(any(b.id == block.id for b in blocks))
+
+        chan.remove_block(block.id)
+
+        # Check block was removed
+        contents, _ = chan.contents()
+        blocks = [c for c in contents if c.base_class == 'Block']
+        self.assertFalse(any(b.id == block.id for b in blocks))

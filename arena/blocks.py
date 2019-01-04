@@ -29,17 +29,13 @@ class Block(Resource):
         """
         return self._put('/{id}', data=kwargs)
 
-    def delete(self):
-        """deletes the block"""
-        return self._delete('/{id}')
-
 
 class Blocks(Resource):
     base_endpoint = '/blocks'
 
-    def block(self, id):
+    def block(self, *args, **kwargs):
         """get an existing block"""
-        return self._resource(Block, id)
+        return self._resource(Block, *args, **kwargs)
 
     @paginated
     def search(self, query, **kwargs):
