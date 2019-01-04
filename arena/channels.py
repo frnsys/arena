@@ -23,7 +23,7 @@ class Channel(Resource):
 
     def thumb(self, **kwargs):
         """gets a small representation of this channel"""
-        return self._get('/{slug}/thumb')
+        return self._get('/{slug}/thumb', auth=True)
 
     @paginated
     def connections(self, **kwargs):
