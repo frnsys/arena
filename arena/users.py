@@ -1,12 +1,11 @@
-from .search import search
-from .channels import Channel
 from .resource import Resource, paginated
 
 
 class User(Resource):
     base_endpoint = '/users'
 
-    def __init__(self, id, **data):
+    def __init__(self, api, id, **data):
+        super().__init__(api)
         self.id = id
         if not data:
             data = self._get('/{id}')
@@ -15,12 +14,12 @@ class User(Resource):
     def channel(self):
         """get the user's channel"""
         data = self._get('/{id}/channel', auth=True)
-        return Channel(**data)
+        return self.api.channels.channel(**data)
 
     def channels(self):
         """get the user's channels"""
         page = self._get('/{id}/channels', auth=True)
-        chans = [Channel(**d) for d in page.pop('channels')]
+        chans = [self.api.channels.channel(**d) for d in page.pop('channels')]
         return chans, page
 
     def following(self):
@@ -39,14 +38,14 @@ class User(Resource):
 class Users(Resource):
     base_endpoint = '/users'
 
-    def user(self, id):
+    def user(self, *args, **kwargs):
         """get an existing user"""
-        return self._resource(User, id)
+        return self._resource(User, *args, **kwargs)
 
     @paginated
     def search(self, query, **kwargs):
         """searches users"""
-        page = search.users(query, **kwargs)
+        page = self.api.search.users(query, **kwargs)
         for k in ['channels', 'blocks']:
             page.pop(k)
         users = [self._resource(User, **d) for d in page.pop('users')]

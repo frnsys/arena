@@ -1,5 +1,3 @@
-from .users import User
-from .search import search
 from .resource import Resource, paginated
 
 
@@ -16,7 +14,7 @@ class Channel(Resource):
         data.pop('contents')
 
         self._set_data(data)
-        self.user = self._resource(User, **self.user)
+        self.user = self.api.users.user(**self.user)
 
     @paginated
     def all(self, **kwargs):
@@ -53,7 +51,7 @@ class Channel(Resource):
     def collaborators(self):
         """get only collaborators for this channel"""
         page = self._get('/{slug}/collaborators')
-        users = [self._resource(User, **d) for d in page.pop('users')]
+        users = [self.api.users.user(**d) for d in page.pop('users')]
         return users, page
 
     # TODO
@@ -108,14 +106,14 @@ class Channels(Resource):
             'status': status
         })
 
-    def channel(self, slug):
+    def channel(self, *args, **kwargs):
         """get an existing channel"""
-        return self._resource(Channel, slug)
+        return self._resource(Channel, *args, **kwargs)
 
     @paginated
     def search(self, query, **kwargs):
         """searches channels"""
-        page = search.channels(query, **kwargs)
+        page = self.api.search.channels(query, **kwargs)
         for k in ['users', 'blocks']:
             page.pop(k)
         chans = [self._resource(Channel, **d)

@@ -1,5 +1,4 @@
 from .users import User
-from .search import search
 from .channels import Channel
 from .resource import Resource, paginated
 
@@ -11,14 +10,15 @@ class Block(Resource):
         super().__init__(api)
         self.id = id
         if not data:
-            data = self._get('/{id}')
+            data = self._get('/{id}', auth=True)
         self._set_data(data)
         self.user = self._resource(User, **self.user)
 
     @paginated
     def channels(self, **kwargs):
         """get channels this block is in"""
-        page = self._get('/{id}/channels', params=kwargs['params'])
+        page = self._get('/{id}/channels', params=kwargs['params'], auth=True)
+        print(page)
         chans = [self._resource(Channel, **d) for d in page.pop('channels')]
         return chans, page
 
@@ -45,7 +45,7 @@ class Blocks(Resource):
     @paginated
     def search(self, query, **kwargs):
         """searches blocks"""
-        page = search.blocks(query, **kwargs)
+        page = self.api.search.blocks(query, **kwargs)
         for k in ['channels', 'users']:
             page.pop(k)
         blocks = [self._resource(Block, **d) for d in page.pop('blocks')]

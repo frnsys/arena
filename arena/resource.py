@@ -1,9 +1,9 @@
 import requests
 from functools import wraps
 from arena import BASE_URL
-from .blocks import Block
-from .channels import Channel
-from .users import User
+# from .blocks import Block
+# from .channels import Channel
+# from .users import User
 
 
 def paginated(fn):
