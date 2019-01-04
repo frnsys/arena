@@ -1,11 +1,8 @@
-import os
 import unittest
-from arena import Arena
+from tests import arena
 from arena.blocks import Block
 from arena.channels import Channel
 
-token = os.environ['ARENA']
-arena = Arena(token)
 
 class BlockTests(unittest.TestCase):
     def test_data(self):

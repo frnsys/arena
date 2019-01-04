@@ -1,9 +1,6 @@
-import os
 import unittest
-from arena import Arena
+from tests import arena
 
-token = os.environ['ARENA']
-arena = Arena(token)
 
 class UserTests(unittest.TestCase):
     def setUp(self):

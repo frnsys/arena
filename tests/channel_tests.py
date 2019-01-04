@@ -1,10 +1,7 @@
-import os
 import unittest
-from arena import Arena
+from tests import arena
 from arena.channels import Channel
 
-token = os.environ['ARENA']
-arena = Arena(token)
 
 class ChannelTests(unittest.TestCase):
     def test_list(self):
