@@ -5,6 +5,7 @@ from .users import Users
 from .blocks import Blocks
 from .channels import Channels
 from .search import Search
+from .auth import Auth
 
 
 class Arena:
