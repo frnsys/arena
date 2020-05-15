@@ -37,6 +37,16 @@ For example:
 
     chans, page = arena.channels.list(page=1, per_page=10)
 
+### Data
+
+Resources (Block, Channel, User) have a nested `.data` attribute that contains the raw API fields return from the are.na API. For example:
+```python
+channels, page = user.channels()
+for chanl in channels:
+    if chanl.data['status'] not in ['private', 'closed']:
+        ...
+```
+
 ### Channels
 
 #### Listing channels

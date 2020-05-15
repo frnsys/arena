@@ -21,6 +21,7 @@ class Resource():
         self.api = api
 
     def _set_data(self, data):
+        self.data = data
         for name, val in data.items():
             setattr(self, name, val)
 
