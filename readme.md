@@ -43,7 +43,7 @@ Resources (Block, Channel, User) have a nested `.data` attribute that contains t
 ```python
 channels, page = user.channels()
 for chanl in channels:
-    if chanl.data['status'] not in ['private']:
+    if chanl.data['status'] not in ['private', 'closed']:
         ...
 ```
 
